@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulatory Endore</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    video {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .calculator-frame {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 300px;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 5px solid #c69c6d;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #000, 0 0 25px #6b4226;
+      overflow: hidden;
+      transition: transform 1s ease-out;
+    }
+    #healing-calculator {
+      left: -350px;
+    }
+    #damage-calculator {
+      right: -350px;
+    }
+    #healing-calculator.open {
+      transform: translate(50px, -50%);
+    }
+    #damage-calculator.open {
+      transform: translate(-50px, -50%);
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <video autoplay muted loop>
+    <source src="your-video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div id="healing-calculator" class="calculator-frame">
+    <iframe src="kalkulator-leczenia-endore.html"></iframe>
+  </div>
+  <div id="damage-calculator" class="calculator-frame">
+    <iframe src="kalkulator-dmg-endore.html"></iframe>
+  </div>
+  <script>
+    setTimeout(() => {
+      document.getElementById('healing-calculator').classList.add('open');
+      document.getElementById('damage-calculator').classList.add('open');
+    }, 5000);
+  </script>
+</body>
+</html>
