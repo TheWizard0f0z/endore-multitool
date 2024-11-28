@@ -18,7 +18,8 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: contain; /* Wideo będzie całe widoczne */
+      background: black;   /* Czarny kolor w tle, jeśli proporcje wideo nie wypełniają ekranu */
     }
     .calculator-frame {
       position: absolute;
@@ -32,6 +33,7 @@
       box-shadow: 0 0 15px #000, 0 0 25px #6b4226;
       overflow: hidden;
       transition: transform 1s ease-out;
+      cursor: pointer;
     }
     #healing-calculator {
       left: -350px;
@@ -40,15 +42,20 @@
       right: -350px;
     }
     #healing-calculator.open {
-      transform: translate(50px, -350%);
+      transform: translate(50px, -375%);
     }
     #damage-calculator.open {
-      transform: translate(-50px, -350%);
+      transform: translate(-50px, -375%);
     }
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+    }
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -57,12 +64,14 @@
     <source src="gandalf.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
-  <div id="healing-calculator" class="calculator-frame">
+  <!-- Ramka dla kalkulatora leczenia -->
+  <a href="kalkulator-leczenia-endore.html" id="healing-calculator" class="calculator-frame">
     <iframe src="kalkulator-leczenia-endore.html"></iframe>
-  </div>
-  <div id="damage-calculator" class="calculator-frame">
+  </a>
+  <!-- Ramka dla kalkulatora dmg -->
+  <a href="kalkulator-dmg-endore.html" id="damage-calculator" class="calculator-frame">
     <iframe src="kalkulator-dmg-endore.html"></iframe>
-  </div>
+  </a>
   <script>
     setTimeout(() => {
       document.getElementById('healing-calculator').classList.add('open');
