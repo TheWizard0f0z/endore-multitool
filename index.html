@@ -13,6 +13,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      flex-direction: column;
     }
     video {
       position: absolute;
@@ -33,7 +34,7 @@
       box-shadow: 0 0 15px #000, 0 0 25px #6b4226;
       overflow: hidden;
       transition: transform 1s ease-out;
-      cursor: pointer;
+      cursor: pointer; /* Wskaźnik zmienia się na rączkę przy najechaniu */
     }
     #healing-calculator {
       left: -350px;
@@ -47,32 +48,125 @@
     #damage-calculator.open {
       transform: translate(-375px, -50%);
     }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    #calculator-container {
+      position: relative;
+      width: 80%;
+      height: 80%;
+      margin-top: 60px; /* Odstęp od wideo */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
-    a {
-      display: block;
+    /* Styl dla sekcji kalkulatorów */
+    .calculator-section {
+      display: none;
       width: 100%;
       height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #000, 0 0 25px #6b4226;
+    }
+    .calculator-section.active {
+      display: block;
     }
   </style>
 </head>
 <body>
   <video autoplay muted loop>
-    <source src="gandalf.mp4" type="video/mp4">
+    <source src="your-video.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
+
   <!-- Ramka dla kalkulatora leczenia -->
-  <a href="kalkulator-leczenia-endore.html" id="healing-calculator" class="calculator-frame">
-    <iframe src="kalkulator-leczenia-endore.html"></iframe>
-  </a>
+  <div id="healing-calculator" class="calculator-frame" onclick="loadCalculator('healing')">
+    <p style="color: #f4e9c5; text-align: center; line-height: 400px;">Kalkulator Leczenia</p>
+  </div>
+
   <!-- Ramka dla kalkulatora dmg -->
-  <a href="kalkulator-dmg-endore.html" id="damage-calculator" class="calculator-frame">
-    <iframe src="kalkulator-dmg-endore.html"></iframe>
-  </a>
+  <div id="damage-calculator" class="calculator-frame" onclick="loadCalculator('damage')">
+    <p style="color: #f4e9c5; text-align: center; line-height: 400px;">Kalkulator Obrażeń</p>
+  </div>
+
+  <!-- Kontener na kalkulatory -->
+  <div id="calculator-container">
+    <!-- Sekcja kalkulatora leczenia -->
+    <div id="healing-calculator-section" class="calculator-section">
+      <!-- Wstaw zawartość kalkulatora leczenia tutaj -->
+      <h2>Kalkulator Leczenia</h2>
+      <form>
+        <label for="anatomy">Anatomia:</label>
+        <input type="number" id="anatomy" placeholder="Wpisz wartość anatomii" step="any">
+        <label for="healing">Uzdrawianie:</label>
+        <input type="number" id="healing" placeholder="Wpisz wartość uzdrawiania" step="any">
+        <button type="button" onclick="calculateHealing()">Oblicz</button>
+        <div id="healing-result"></div>
+      </form>
+    </div>
+
+    <!-- Sekcja kalkulatora obrażeń -->
+    <div id="damage-calculator-section" class="calculator-section">
+      <!-- Wstaw zawartość kalkulatora obrażeń tutaj -->
+      <h2>Kalkulator Obrażeń</h2>
+      <form>
+        <label for="minbasewapondmg">Minimalny bazowy dmg broni:</label>
+        <input type="number" id="minbasewapondmg" placeholder="Wpisz minimalny bazowy dmg broni" step="any">
+        <label for="maxbasewapondmg">Maksymalny bazowy dmg broni:</label>
+        <input type="number" id="maxbasewapondmg" placeholder="Wpisz maksymalny bazowy dmg broni" step="any">
+        <button type="button" onclick="calculateDamage()">Oblicz</button>
+        <div id="damage-result"></div>
+      </form>
+    </div>
+  </div>
+
   <script>
+    // Funkcja do załadowania odpowiedniego kalkulatora
+    function loadCalculator(type) {
+      // Ukryj obie sekcje
+      document.getElementById('healing-calculator-section').classList.remove('active');
+      document.getElementById('damage-calculator-section').classList.remove('active');
+
+      // Pokaż odpowiednią sekcję
+      if (type === 'healing') {
+        document.getElementById('healing-calculator-section').classList.add('active');
+      } else if (type === 'damage') {
+        document.getElementById('damage-calculator-section').classList.add('active');
+      }
+    }
+
+    // Funkcja do obliczeń dla kalkulatora leczenia
+    function calculateHealing() {
+      const anatomy = parseFloat(document.getElementById('anatomy').value) || 0;
+      const healing = parseFloat(document.getElementById('healing').value) || 0;
+
+      // Przykładowe obliczenia
+      const startingTicks = 5 + Math.floor(healing / 20);
+      const healAmountRaw = anatomy * 0.05 + healing * 0.1;
+      const healAmount = 2 + Math.floor(healAmountRaw);
+
+      document.getElementById('healing-result').innerHTML = `
+        <p>Tiki: <strong>${startingTicks}</strong></p>
+        <p>HP na tik: <strong>${healAmount}</strong></p>
+      `;
+    }
+
+    // Funkcja do obliczeń dla kalkulatora obrażeń
+    function calculateDamage() {
+      const minbasewapondmg = parseFloat(document.getElementById('minbasewapondmg').value) || 0;
+      const maxbasewapondmg = parseFloat(document.getElementById('maxbasewapondmg').value) || 0;
+
+      // Przykładowe obliczenia
+      const minDamage = minbasewapondmg * 1.5;
+      const maxDamage = maxbasewapondmg * 1.5;
+
+      document.getElementById('damage-result').innerHTML = `
+        <p>Minimalny dmg: <strong>${minDamage}</strong></p>
+        <p>Maksymalny dmg: <strong>${maxDamage}</strong></p>
+      `;
+    }
+
+    // Po 5 sekundach przesuwają się ramki
     setTimeout(() => {
       document.getElementById('healing-calculator').classList.add('open');
       document.getElementById('damage-calculator').classList.add('open');
